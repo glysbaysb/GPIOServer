@@ -12,6 +12,12 @@ import java.net.*;
  * @author 2016-12-27
  */
 public class server implements Runnable {
+    /**
+     * The different operations of the protocol
+     */
+    final byte LED_CHANGE = 0,
+            SWITCH_CHANGE = 1;
+    
     DatagramSocket socket;
     Window w;
     
@@ -32,7 +38,11 @@ public class server implements Runnable {
                 DatagramPacket packet = new DatagramPacket(buf, buf.length);
                 socket.receive(packet);
                 
-                System.out.print("packet recvd\n");
+                byte op  = buf[0];
+                byte dev = buf[1];
+                byte val = buf[2];
+                if(op == LED_CHANGE)
+                    w.ledStatusChange(dev, val > 0);
             }
             catch(Exception e) {
                 System.err.print(e);
