@@ -5,6 +5,9 @@
  */
 package gpioserver;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JLabel;
 
 /**
@@ -12,12 +15,19 @@ import javax.swing.JLabel;
  * @author 2016-12-27
  */
 public class Window extends javax.swing.JFrame {
+    
     public void ledStatusChange(int which, boolean turnedOn) {
-        JLabel arr[] = {LED1, LED2, LED3, LED4,
-            LED5, LED6, LED7, LED8
-        };
+        Map<Integer, JLabel> mapping = new HashMap<>();
+        mapping.put(5, LED1);
+        mapping.put(6, LED2);
+        mapping.put(7, LED3);
+        mapping.put(8, LED4);
+        mapping.put(9, LED5);
+        mapping.put(10, LED6);
+        mapping.put(11, LED7);
+        mapping.put(12, LED8);
         
-        JLabel a = arr[which];
+        JLabel a = mapping.get(which);
         a.setText(turnedOn ? "AN" : "AUS");
         //todo: a.setBorder(border);
     }
