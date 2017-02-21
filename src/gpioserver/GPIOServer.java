@@ -21,13 +21,12 @@ public class GPIOServer {
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                Window w = new Window();
-                w.setVisible(true);
+                Window w;
                 try {
-                    (new Thread(new server(w))).start();
+                    w = new Window();
+                    w.setVisible(true);
                 } catch (IOException ex) {
-                    System.err.print(ex);
-                    return;
+                    Logger.getLogger(GPIOServer.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });

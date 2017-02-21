@@ -99,11 +99,17 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Taster 1"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="switch1ActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="switch2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Taster 2"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="switch2ActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="switch3">
           <Properties>

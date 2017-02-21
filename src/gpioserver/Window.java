@@ -1,10 +1,11 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * todo: cancel thread when the window closes
  */
 package gpioserver;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,7 @@ import javax.swing.JLabel;
  * @author 2016-12-27
  */
 public class Window extends javax.swing.JFrame {
+    private Server server;
     
     public void ledStatusChange(int which, boolean turnedOn) {
         Map<Integer, JLabel> mapping = new HashMap<>();
@@ -30,13 +32,15 @@ public class Window extends javax.swing.JFrame {
         JLabel a = mapping.get(which);
         a.setText(turnedOn ? "AN" : "AUS");
         //todo: a.setBorder(border);
+        // todo: image...
     }
     
     /**
      * Creates new form Window
      */
-    public Window() {
+    public Window() throws IOException {
         initComponents();
+        (server = new Server(this)).execute();
     }
 
     /**
@@ -75,8 +79,18 @@ public class Window extends javax.swing.JFrame {
         });
 
         switch1.setText("Taster 1");
+        switch1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                switch1ActionPerformed(evt);
+            }
+        });
 
         switch2.setText("Taster 2");
+        switch2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                switch2ActionPerformed(evt);
+            }
+        });
 
         switch3.setText("Taster 3");
         switch3.addActionListener(new java.awt.event.ActionListener() {
@@ -209,6 +223,13 @@ public class Window extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_switch3ActionPerformed
 
+    private void switch2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switch2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_switch2ActionPerformed
+
+    private void switch1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switch1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_switch1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel LED1;
