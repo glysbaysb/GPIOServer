@@ -3,12 +3,15 @@
  */
 package gpioserver;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.util.Collections;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 
 /**
@@ -33,6 +36,27 @@ public class Window extends javax.swing.JFrame {
         a.setText(turnedOn ? "AN" : "AUS");
         //todo: a.setBorder(border);
         // todo: image...
+    }
+    
+    private void sendSwitchChange(byte which) {
+        try {
+            ProtocolOperation p = new ProtocolOperation(
+                    ProtocolOperation.SWITCH_CHANGE,
+                    which,
+                    (byte)1);
+            
+            byte[] data = p.getBuffer();
+            InetAddress address = InetAddress.getByName("255.255.255.255");
+            DatagramPacket packet = new DatagramPacket(data, data.length,
+                    address, 30001);
+            
+            DatagramSocket socket = new DatagramSocket();
+            socket.send(packet);
+        } catch (SocketException ex) {
+            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /**
@@ -216,19 +240,19 @@ public class Window extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void switch4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switch4ActionPerformed
-        // TODO add your handling code here:
+        sendSwitchChange((byte)4);
     }//GEN-LAST:event_switch4ActionPerformed
 
     private void switch3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switch3ActionPerformed
-        // TODO add your handling code here:
+        sendSwitchChange((byte)3);
     }//GEN-LAST:event_switch3ActionPerformed
 
     private void switch2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switch2ActionPerformed
-        // TODO add your handling code here:
+        sendSwitchChange((byte)2);
     }//GEN-LAST:event_switch2ActionPerformed
 
     private void switch1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switch1ActionPerformed
-        // TODO add your handling code here:
+        sendSwitchChange((byte)1);
     }//GEN-LAST:event_switch1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
