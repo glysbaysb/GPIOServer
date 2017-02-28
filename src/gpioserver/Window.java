@@ -3,6 +3,8 @@
  */
 package gpioserver;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -13,6 +15,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
+import javax.swing.Timer;
 
 /**
  *
@@ -103,6 +106,8 @@ public class Window extends javax.swing.JFrame {
         LED7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("GPIO Server");
+        setResizable(false);
 
         switches.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -190,12 +195,12 @@ public class Window extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, switchesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(switchesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(schalter1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(schalter1, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, switchesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(switch4, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
-                        .addComponent(switch1, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
-                        .addComponent(switch2, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
-                        .addComponent(switch3, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE))
+                        .addComponent(switch4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(switch1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(switch2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(switch3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(schalter4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(schalter3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(schalter2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -241,7 +246,7 @@ public class Window extends javax.swing.JFrame {
                 .addComponent(LED3, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(LED4, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
                 .addComponent(LED5, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(LED6, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -271,9 +276,9 @@ public class Window extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(leds, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(switches, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -282,45 +287,58 @@ public class Window extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(switches, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addComponent(leds, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(switches, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void releaseSwitch(byte which) {
+        ActionListener taskPerformer = (ActionEvent evt) -> {
+            sendSwitchChange(which, (byte)0);
+        };
+        Timer timer = new Timer(100, taskPerformer);
+        timer.setRepeats(false);
+        timer.start();
+    }
+    
     private void switch4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switch4ActionPerformed
-        sendSwitchChange((byte)4, (byte)1);
+        sendSwitchChange((byte)17, (byte)1);
+        releaseSwitch((byte)17);
     }//GEN-LAST:event_switch4ActionPerformed
 
     private void switch3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switch3ActionPerformed
-        sendSwitchChange((byte)3, (byte)1);
+        sendSwitchChange((byte)16, (byte)1);
+        releaseSwitch((byte)16);
     }//GEN-LAST:event_switch3ActionPerformed
 
     private void switch2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switch2ActionPerformed
-        sendSwitchChange((byte)2, (byte)1);
+        sendSwitchChange((byte)3, (byte)1);
+        releaseSwitch((byte)3);
     }//GEN-LAST:event_switch2ActionPerformed
 
     private void switch1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switch1ActionPerformed
-        sendSwitchChange((byte)1, (byte)1);
+        sendSwitchChange((byte)2, (byte)1);
+        releaseSwitch((byte)2);
     }//GEN-LAST:event_switch1ActionPerformed
 
     private void schalter1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_schalter1ActionPerformed
-        sendSwitchChange((byte)5, (byte)(schalter1.isSelected() ? 1 : 0));
+        sendSwitchChange((byte)18, (byte)(schalter1.isSelected() ? 1 : 0));
     }//GEN-LAST:event_schalter1ActionPerformed
 
     private void schalter2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_schalter2ActionPerformed
-        sendSwitchChange((byte)6, (byte)(schalter1.isSelected() ? 1 : 0));
+        sendSwitchChange((byte)19, (byte)(schalter1.isSelected() ? 1 : 0));
     }//GEN-LAST:event_schalter2ActionPerformed
 
     private void schalter3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_schalter3ActionPerformed
-        sendSwitchChange((byte)7, (byte)(schalter1.isSelected() ? 1 : 0));
+        sendSwitchChange((byte)20, (byte)(schalter1.isSelected() ? 1 : 0));
     }//GEN-LAST:event_schalter3ActionPerformed
 
     private void schalter4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_schalter4ActionPerformed
-        sendSwitchChange((byte)8, (byte)(schalter1.isSelected() ? 1 : 0));
+        sendSwitchChange((byte)21, (byte)(schalter1.isSelected() ? 1 : 0));
     }//GEN-LAST:event_schalter4ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
