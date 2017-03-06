@@ -5,15 +5,20 @@ package gpioserver;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.Timer;
 
@@ -36,7 +41,18 @@ public class Window extends javax.swing.JFrame {
         mapping.put(12, LED8);
         
         JLabel a = mapping.get(which);
-        a.setText(turnedOn ? "AN" : "AUS");
+        try {           
+            BufferedImage imgOn = ImageIO.read(Window.class.getResource("/resources/licht-an.png"));
+            ImageIcon iconOn = new ImageIcon(imgOn);
+
+            BufferedImage imgOff = ImageIO.read(Window.class.getResource("/resources/licht-aus.png"));
+            ImageIcon iconOff = new ImageIcon(imgOff);
+
+            a.setIcon(turnedOn ? iconOn : iconOff);
+        } catch (IOException ex) {
+            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //
         //todo: a.setBorder(border);
         // todo: image...
     }
@@ -71,10 +87,20 @@ public class Window extends javax.swing.JFrame {
     
     /**
      * Creates new form Window
+     * @throws java.io.IOException
      */
     public Window() throws IOException {
         initComponents();
         (server = new Server(this)).execute();
+        
+        JLabel[] arr = {LED1, LED2, LED3, LED4, LED5, LED6, LED7, LED8};
+        for(int i = 0; i < arr.length; i++) {
+            BufferedImage imgOff = ImageIO.read(Window.class.getResource("/resources/licht-aus.png"));
+            ImageIcon iconOff = new ImageIcon(imgOff);
+            
+            arr[i].setIcon(iconOff);
+            arr[i].setText("");
+        }
     }
 
     /**
