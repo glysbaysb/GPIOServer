@@ -13,10 +13,15 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.URL;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -172,6 +177,11 @@ public class Window extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("GPIO Server");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         switches.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -404,6 +414,27 @@ public class Window extends javax.swing.JFrame {
     private void schalter4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_schalter4ActionPerformed
         sendSwitchChange((byte)21, (byte)(schalter1.isSelected() ? 1 : 0));
     }//GEN-LAST:event_schalter4ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        qemu.destroyForcibly();
+        
+        try {
+            Stream<Path> files = Files.list(Paths.get(""));
+            files.forEach((_item) -> {
+                
+                try {
+                    if(_item.toString().startsWith("trace-")) {
+                        System.out.println(_item.toString());
+                        Files.delete(_item);
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+        } catch (IOException ex) {
+            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel LED1;
