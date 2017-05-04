@@ -23,11 +23,16 @@ import javax.swing.JLabel;
 import javax.swing.Timer;
 
 /**
- *
+ * Main class of the GPIO Server. Does three things:
+ * * handles all GUI operations
+ * * checks whether QEMU is still alive
+ * * handles all network thingies
  * @author 2016-12-27
  */
 public class Window extends javax.swing.JFrame {
     private Server server;
+    private Process qemu;
+    private Timer qemuTimer;
     
     public void ledStatusChange(int which, boolean turnedOn) {
         Map<Integer, JLabel> mapping = new HashMap<>();
@@ -52,9 +57,6 @@ public class Window extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //
-        //todo: a.setBorder(border);
-        // todo: image...
     }
     
     /**
@@ -87,11 +89,48 @@ public class Window extends javax.swing.JFrame {
     
     /**
      * Creates new form Window
+     * @param p the qemu process
      * @throws java.io.IOException
      */
-    public Window() throws IOException {
+    public Window(Process p) throws IOException {
         initComponents();
+        
         (server = new Server(this)).execute();
+        
+        /* create a timer that checks whether QEMU is still alive and
+           prints all output */
+        qemu = p;
+        ActionListener taskPerformer = (ActionEvent evt) -> {
+            if(!qemu.isAlive()) {
+                /* todo: signal that to the window */
+                System.err.println("process died");
+               // return;
+            }
+            
+            try {
+                if(qemu.getInputStream().available() > 0) 
+                {
+                    byte[] b = new byte[80];
+                    qemu.getInputStream().read(b);
+                    System.out.print(">" + new String(b));
+                }
+                
+                if(qemu.getErrorStream().available() > 0) 
+                {
+                    byte[] b = new byte[80];
+                    qemu.getErrorStream().read(b);
+                    System.err.print("!" + new String(b));
+                }
+                
+                qemuTimer.restart();
+            } catch (IOException ex) {
+                Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+            }         
+        };
+        qemuTimer = new Timer(500, taskPerformer);
+        qemuTimer.setRepeats(true);
+        qemuTimer.start();
+        
         
         JLabel[] arr = {LED1, LED2, LED3, LED4, LED5, LED6, LED7, LED8};
         for(int i = 0; i < arr.length; i++) {
