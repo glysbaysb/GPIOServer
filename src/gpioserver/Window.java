@@ -104,7 +104,7 @@ public class Window extends javax.swing.JFrame {
             if(!qemu.isAlive()) {
                 /* todo: signal that to the window */
                 System.err.println("process died");
-               // return;
+                return;
             }
             
             try {
@@ -128,7 +128,6 @@ public class Window extends javax.swing.JFrame {
             }         
         };
         qemuTimer = new Timer(500, taskPerformer);
-        qemuTimer.setRepeats(true);
         qemuTimer.start();
         
         
