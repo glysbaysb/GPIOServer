@@ -5,6 +5,7 @@ package gpioserver;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -107,8 +108,8 @@ public class Window extends javax.swing.JFrame {
         qemu = p;
         ActionListener taskPerformer = (ActionEvent evt) -> {
             if(!qemu.isAlive()) {
-                /* todo: signal that to the window */
-                System.err.println("process died");
+                this.dispose();
+                this.formWindowClosing(new WindowEvent(this, 0));
                 return;
             }
             
@@ -434,6 +435,8 @@ public class Window extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        System.exit(-1);
     }//GEN-LAST:event_formWindowClosing
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
